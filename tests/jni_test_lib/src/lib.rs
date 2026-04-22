@@ -1,4 +1,5 @@
 mod array_operations_demo;
+mod exception_demo;
 mod instance_methods_demo;
 mod object_fields_demo;
 mod object_operations_demo;

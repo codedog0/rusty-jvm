@@ -13,7 +13,7 @@ use crate::vm::jni::array_operations_impl::{
     set_char_array_region, set_double_array_region, set_float_array_region, set_int_array_region,
     set_long_array_region, set_object_array_element, set_short_array_region,
 };
-use crate::vm::jni::exception_impl::{exception_check, exception_occurred};
+use crate::vm::jni::exception_impl::{exception_check, exception_occurred, throw};
 use crate::vm::jni::global_and_local_references_impl::{pop_local_frame, push_local_frame};
 use crate::vm::jni::instance_methods_impl::{
     call_boolean_method_a, call_byte_method_a, call_char_method_a, call_double_method_a,
@@ -56,7 +56,7 @@ use crate::vm::jni::string_operations_impl::{
 use crate::vm::jni::version_information_impl::get_version;
 use jni_sys::{
     jarray, jboolean, jbyte, jchar, jclass, jdouble, jfieldID, jfloat, jint, jlong, jmethodID,
-    jobject, jobjectRefType, jshort, jsize, jthrowable, jvalue, jweak, va_list, JNIEnv,
+    jobject, jobjectRefType, jshort, jsize, jvalue, jweak, va_list, JNIEnv,
     JNIInvokeInterface_, JNINativeInterface_, JNINativeMethod, JavaVM,
 };
 use std::ffi::{c_char, c_void};
@@ -154,7 +154,6 @@ jni_stub!(ToReflectedMethod(jclass, jmethodID, jboolean) -> jobject);
 jni_stub!(GetSuperclass(jclass) -> jclass);
 jni_stub!(IsAssignableFrom(jclass, jclass) -> jboolean);
 jni_stub!(ToReflectedField(jclass, jfieldID, jboolean) -> jobject);
-jni_stub!(Throw(jthrowable) -> jint);
 jni_stub!(ThrowNew(jclass, *const c_char) -> jint);
 jni_stub!(ExceptionDescribe() -> ());
 jni_stub!(ExceptionClear() -> ());
@@ -264,7 +263,7 @@ static VTABLE: Wrapper = {
     ni.v24.GetSuperclass = GetSuperclass;
     ni.v24.IsAssignableFrom = IsAssignableFrom;
     ni.v24.ToReflectedField = ToReflectedField;
-    ni.v24.Throw = Throw;
+    ni.v24.Throw = throw;
     ni.v24.ThrowNew = ThrowNew;
     ni.v24.ExceptionOccurred = exception_occurred;
     ni.v24.ExceptionDescribe = ExceptionDescribe;
